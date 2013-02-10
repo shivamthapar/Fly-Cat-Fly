@@ -29,6 +29,7 @@ public class MainActivity extends SimpleBaseGameActivity {
 	//A reference to the current scene
 	public Scene mCurrentScene;
 	public static MainActivity instance;
+	private int blah;
 	
     @Override
     public EngineOptions onCreateEngineOptions() {
