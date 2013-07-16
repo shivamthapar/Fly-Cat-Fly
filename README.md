@@ -11,8 +11,6 @@ A fucking awesome Andengine powered game (fucking awesome part still WIP).
 **July 5 - July 7**
 * Discuss the details of the gameplay, begin basic work over the weekend.
 
---------------------------------------------------------------------------------------
-
 **July 7 - July 14**
 * Andy: Finish basic framework for the app (scene navigation, splash -> menu -> game etc.)
 * Shivam: Create framework for gameplay (classes for player, objects, etc.)
@@ -22,7 +20,9 @@ A fucking awesome Andengine powered game (fucking awesome part still WIP).
 **July 14 - July 21** 
 * Shivam: Basic gameplay (flying physics, touch-based controls, auto-scrolling screen, distance counter)
 * Andy: Gameplay background and player art.
-            
+
+--------------------------------------------------------------------------------------
+
 **July 21 - July 28**
 * Shivam: Initial launching (running down the ramp), bouncing physics (off the ground)
 * Andy: Menu art, button art, HUD art. Design in-air objects.
