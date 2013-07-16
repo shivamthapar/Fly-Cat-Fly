@@ -1,4 +1,4 @@
-package com.matimdev;
+package app.flycatfly;
 
 import java.io.IOException;
 
@@ -15,15 +15,9 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 
 import android.view.KeyEvent;
+import app.flycatfly.manager.ResourcesManager;
+import app.flycatfly.manager.SceneManager;
 
-import com.matimdev.manager.ResourcesManager;
-import com.matimdev.manager.SceneManager;
-
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
 public class GameActivity extends BaseGameActivity
 {
 	private BoundCamera camera;

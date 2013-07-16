@@ -1,4 +1,4 @@
-package com.matimdev.manager;
+package app.flycatfly.manager;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
@@ -18,14 +18,8 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
 import android.graphics.Color;
+import app.flycatfly.GameActivity;
 
-import com.matimdev.GameActivity;
-
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
 public class ResourcesManager
 {
 	//---------------------------------------------

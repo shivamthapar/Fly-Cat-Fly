@@ -1,4 +1,4 @@
-package com.matimdev.scene;
+package app.flycatfly.scene;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -9,9 +9,9 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
-import com.matimdev.base.BaseScene;
-import com.matimdev.manager.SceneManager;
-import com.matimdev.manager.SceneManager.SceneType;
+import app.flycatfly.base.BaseScene;
+import app.flycatfly.manager.SceneManager;
+import app.flycatfly.manager.SceneManager.SceneType;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 {

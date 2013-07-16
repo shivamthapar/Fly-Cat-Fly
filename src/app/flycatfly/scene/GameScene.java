@@ -1,4 +1,4 @@
-package com.matimdev.scene;
+package app.flycatfly.scene;
 
 import java.io.IOException;
 
@@ -28,6 +28,13 @@ import org.andengine.util.level.simple.SimpleLevelEntityLoaderData;
 import org.andengine.util.level.simple.SimpleLevelLoader;
 import org.xml.sax.Attributes;
 
+import app.flycatfly.base.BaseScene;
+import app.flycatfly.extras.LevelCompleteWindow;
+import app.flycatfly.extras.LevelCompleteWindow.StarsCount;
+import app.flycatfly.manager.SceneManager;
+import app.flycatfly.manager.SceneManager.SceneType;
+import app.flycatfly.object.Player;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -37,18 +44,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.matimdev.base.BaseScene;
-import com.matimdev.extras.LevelCompleteWindow;
-import com.matimdev.extras.LevelCompleteWindow.StarsCount;
-import com.matimdev.manager.SceneManager;
-import com.matimdev.manager.SceneManager.SceneType;
-import com.matimdev.object.Player;
 
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
 public class GameScene extends BaseScene implements IOnSceneTouchListener
 {
 	private int score = 0;

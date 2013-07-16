@@ -1,21 +1,16 @@
-package com.matimdev.manager;
+package app.flycatfly.manager;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
-import com.matimdev.base.BaseScene;
-import com.matimdev.scene.GameScene;
-import com.matimdev.scene.LoadingScene;
-import com.matimdev.scene.MainMenuScene;
-import com.matimdev.scene.SplashScene;
+import app.flycatfly.base.BaseScene;
+import app.flycatfly.scene.GameScene;
+import app.flycatfly.scene.LoadingScene;
+import app.flycatfly.scene.MainMenuScene;
+import app.flycatfly.scene.SplashScene;
 
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
 public class SceneManager
 {
 	//---------------------------------------------

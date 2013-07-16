@@ -1,10 +1,11 @@
-package com.matimdev.scene;
+package app.flycatfly.scene;
 
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.util.adt.color.Color;
-import com.matimdev.base.BaseScene;
-import com.matimdev.manager.SceneManager.SceneType;
+
+import app.flycatfly.base.BaseScene;
+import app.flycatfly.manager.SceneManager.SceneType;
 
 public class LoadingScene extends BaseScene
 {
