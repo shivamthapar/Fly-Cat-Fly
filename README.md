@@ -67,6 +67,7 @@ A fucking awesome Andengine powered game (fucking awesome part still WIP).
 * Get ready for release (licensing, android developer acc., possible port to iphone)
 * Gameplay demonstration video.
 * Take changes from beta testing.
+* Advertisement implementation (Admob, etc.)
 * More debugging.
 
 **September 29 - October 6**
