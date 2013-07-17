@@ -28,6 +28,7 @@ import org.andengine.util.level.simple.SimpleLevelEntityLoaderData;
 import org.andengine.util.level.simple.SimpleLevelLoader;
 import org.xml.sax.Attributes;
 
+import android.view.MotionEvent;
 import app.flycatfly.base.BaseScene;
 import app.flycatfly.extras.LevelCompleteWindow;
 import app.flycatfly.extras.LevelCompleteWindow.StarsCount;
@@ -72,6 +73,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	private boolean gameOverDisplayed = false;
 	
 	private boolean firstTouch = false;
+	private boolean flying = false;
 	
 	@Override
 	public void createScene()
@@ -112,7 +114,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent)
 	{
-		if (pSceneTouchEvent.isActionDown())
+		this.setTouchAreaBindingOnActionDownEnabled(true);
+		this.setTouchAreaBindingOnActionMoveEnabled(true);
+		
+		if (pSceneTouchEvent.isActionDown() || pSceneTouchEvent.isActionMove())
 		{
 			if (!firstTouch)
 			{
@@ -121,8 +126,20 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 			}
 			else
 			{
-				player.jump();
+				float touchX = pSceneTouchEvent.getX();
+			    float touchY = pSceneTouchEvent.getY();
+			    float[] pilotCoord = player.getSceneCenterCoordinates();
+			    float pilotX = pilotCoord[0];
+			    float pilotY = pilotCoord[1];
+			    float xDiff = touchX - pilotX;
+			    float yDiff = touchY - pilotY;
+			    flying = true;
+			    player.fly(xDiff, yDiff);
 			}
+		}
+		if (pSceneTouchEvent.isActionUp())
+		{
+			flying = false;
 		}
 		return false;
 	}
@@ -281,7 +298,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	
 	private void createPhysics()
 	{
-		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -17), false); 
+		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -2), false); 
 		physicsWorld.setContactListener(contactListener());
 		registerUpdateHandler(physicsWorld);
 	}

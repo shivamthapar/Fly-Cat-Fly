@@ -6,6 +6,7 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import java.lang.Math;
 
 import app.flycatfly.manager.ResourcesManager;
 
@@ -25,6 +26,10 @@ public abstract class Player extends AnimatedSprite
 	
 	private int footContacts = 0;
 	
+	public float speed = 5;
+	
+	public double resistance = 0.01;
+	
 	// ---------------------------------------------
 	// CONSTRUCTOR
 	// ---------------------------------------------
@@ -43,11 +48,10 @@ public abstract class Player extends AnimatedSprite
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld)
 	{		
 		body = PhysicsFactory.createBoxBody(physicsWorld, this, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(0, 0, 0));
-
 		body.setUserData("player");
 		body.setFixedRotation(true);
 		
-		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false)
+		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, true)
 		{
 			@Override
 	        public void onUpdate(float pSecondsElapsed)
@@ -55,18 +59,33 @@ public abstract class Player extends AnimatedSprite
 				super.onUpdate(pSecondsElapsed);
 				camera.onUpdate(0.1f);
 				
-				if (getY() <= 0)
+				if (speed > 0.3)
+				{
+					speed -= resistance; // while the character has speed, decrease constantly by resistance
+				}
+				else if (speed > 0)
+				{
+					speed-= resistance;
+					stopAnimation(); //stopping the animation once the character is almost stopped
+				}
+				else
+				{
+					speed = 0; //putting the character to a complete stop
+				}
+				
+				if (getY() <= 0 || speed <= 0)
 				{					
 					onDie();
 				}
 				
 				if (canRun)
 				{	
-					body.setLinearVelocity(new Vector2(5, body.getLinearVelocity().y)); 
+					body.setLinearVelocity(new Vector2(speed, body.getLinearVelocity().y)); 
 				}
 	        }
 		});
 	}
+	
 	
 	public void setRunning()
 	{
@@ -77,13 +96,11 @@ public abstract class Player extends AnimatedSprite
 		animate(PLAYER_ANIMATE, 0, 2, true);
 	}
 	
-	public void jump()
+	public void fly(float xDiff, float yDiff)
 	{
-		if (footContacts < 1) 
-		{
-			return; 
-		}
-		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, 12)); 
+	    float xVelo = xDiff/20;
+	    float yVelo = yDiff/20;
+	    body.setLinearVelocity(xVelo, yVelo);
 	}
 	
 	public void increaseFootContacts()
