@@ -28,10 +28,7 @@ import org.andengine.util.level.simple.SimpleLevelEntityLoaderData;
 import org.andengine.util.level.simple.SimpleLevelLoader;
 import org.xml.sax.Attributes;
 
-import android.view.MotionEvent;
 import app.flycatfly.base.BaseScene;
-import app.flycatfly.extras.LevelCompleteWindow;
-import app.flycatfly.extras.LevelCompleteWindow.StarsCount;
 import app.flycatfly.manager.SceneManager;
 import app.flycatfly.manager.SceneManager.SceneType;
 import app.flycatfly.object.Player;
@@ -48,12 +45,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener
 {
-	private int score = 0;
-	
 	private HUD gameHUD;
-	private Text scoreText;
+	private Text distanceText;
 	private PhysicsWorld physicsWorld;
-	private LevelCompleteWindow levelCompleteWindow;
+	private FlightCompleteScene flightCompleteWindow;
 	
 	private static final String TAG_ENTITY = "entity";
 	private static final String TAG_ENTITY_ATTRIBUTE_X = "x";
@@ -68,12 +63,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	private static final Object TAG_ENTITY_ATTRIBUTE_TYPE_VALUE_LEVEL_COMPLETE = "levelComplete";
 	
 	private Player player;
+	private int score;
 	
-	private Text gameOverText;
 	private boolean gameOverDisplayed = false;
 	
 	private boolean firstTouch = false;
-	private boolean flying = false;
 	
 	@Override
 	public void createScene()
@@ -82,10 +76,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 		createHUD();
 		createPhysics();
 		loadLevel(1);
-		createGameOverText();
-		
-		levelCompleteWindow = new LevelCompleteWindow(vbom);
-		
 		setOnSceneTouchListener(this); 
 	}
 
@@ -133,13 +123,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 			    float pilotY = pilotCoord[1];
 			    float xDiff = touchX - pilotX;
 			    float yDiff = touchY - pilotY;
-			    flying = true;
 			    player.fly(xDiff, yDiff);
 			}
-		}
-		if (pSceneTouchEvent.isActionUp())
-		{
-			flying = false;
 		}
 		return false;
 	}
@@ -202,6 +187,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 						{
 							super.onManagedUpdate(pSecondsElapsed);
 
+							distanceText.setText("Distance: " + Math.round(player.distance));
+							
 							if (player.collidesWith(this))
 							{
 								addToScore(10);
@@ -219,14 +206,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 						@Override
 						public void onDie()
 						{
-							if (!gameOverDisplayed)
-							{
-								displayGameOverText();
-							}
+							//SceneManager.getInstance().loadCompleteScene(engine);
 						}
 					};
 					levelObject = player;
 				}
+				
 				else if (type.equals(TAG_ENTITY_ATTRIBUTE_TYPE_VALUE_LEVEL_COMPLETE))
 				{
 					levelObject = new Sprite(x, y, resourcesManager.complete_stars_region, vbom)
@@ -234,25 +219,24 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 						@Override
 						protected void onManagedUpdate(float pSecondsElapsed) 
 						{
-							super.onManagedUpdate(pSecondsElapsed);
+							super.onManagedUpdate(pSecondsElapsed);			//OLD LEVEL COMPLETE, ON PLAYER HIT STAR
 
 							if (player.collidesWith(this))
 							{
-								levelCompleteWindow.display(StarsCount.TWO, GameScene.this, camera);
+								//flightCompleteScene.display(score, GameScene.this, camera);
 								this.setVisible(false);
 								this.setIgnoreUpdate(true);
 							}
 						}
 					};
 					levelObject.registerEntityModifier(new LoopEntityModifier(new ScaleModifier(1, 1, 1.3f)));
-				}	
+				}
 				else
 				{
 					throw new IllegalArgumentException();
 				}
-
+								
 				levelObject.setCullingEnabled(true);
-
 				return levelObject;
 			}
 		});
@@ -260,27 +244,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 		levelLoader.loadLevelFromAsset(activity.getAssets(), "level/" + levelID + ".lvl");
 	}
 	
-	private void createGameOverText()
-	{
-		gameOverText = new Text(0, 0, resourcesManager.font, "Game Over!", vbom);
-	}
-	
-	private void displayGameOverText()
-	{
-		camera.setChaseEntity(null);
-		gameOverText.setPosition(camera.getCenterX(), camera.getCenterY());
-		attachChild(gameOverText);
-		gameOverDisplayed = true;
-	}
-	
 	private void createHUD()
 	{
 		gameHUD = new HUD();
 		
-		scoreText = new Text(20, 420, resourcesManager.font, "Score: 0123456789", new TextOptions(HorizontalAlign.LEFT), vbom);
-		scoreText.setAnchorCenter(0, 0);	
-		scoreText.setText("Score: 0");
-		gameHUD.attachChild(scoreText);
+		distanceText = new Text(20, 420, resourcesManager.font, "Score: 0123456789", new TextOptions(HorizontalAlign.LEFT), vbom);
+		distanceText.setAnchorCenter(0, 0);	
+		distanceText.setText("Score: 0");
+		gameHUD.attachChild(distanceText);
 		
 		camera.setHUD(gameHUD);
 	}
@@ -293,7 +264,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	private void addToScore(int i)
 	{
 		score += i;
-		scoreText.setText("Score: " + score);
 	}
 	
 	private void createPhysics()

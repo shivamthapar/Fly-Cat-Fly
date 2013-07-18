@@ -28,7 +28,10 @@ public abstract class Player extends AnimatedSprite
 	
 	public float speed = 5;
 	
+	public double distance = 0.000;
+	
 	public double resistance = 0.01;
+
 	
 	// ---------------------------------------------
 	// CONSTRUCTOR
@@ -59,27 +62,28 @@ public abstract class Player extends AnimatedSprite
 				super.onUpdate(pSecondsElapsed);
 				camera.onUpdate(0.1f);
 				
-				if (speed > 0.3)
-				{
-					speed -= resistance; // while the character has speed, decrease constantly by resistance
-				}
-				else if (speed > 0)
-				{
-					speed-= resistance;
-					stopAnimation(); //stopping the animation once the character is almost stopped
-				}
-				else
-				{
-					speed = 0; //putting the character to a complete stop
-				}
-				
-				if (getY() <= 0 || speed <= 0)
-				{					
-					onDie();
-				}
-				
 				if (canRun)
-				{	
+				{
+					if (speed > 0.3)
+					{
+						speed -= resistance; // while the character has speed, decrease constantly by resistance
+						distance += speed/10;
+					}
+					else if (speed > 0)
+					{
+						speed-= resistance;
+						stopAnimation(); //stopping the animation once the character is almost stopped
+					}
+					else
+					{
+						speed = 0; //putting the character to a complete stop
+					}
+				
+					if (getY() <= 0 || speed <= 0)
+					{					
+						onDie();
+					}
+					
 					body.setLinearVelocity(new Vector2(speed, body.getLinearVelocity().y)); 
 				}
 	        }
