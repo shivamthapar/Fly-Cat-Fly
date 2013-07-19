@@ -8,6 +8,7 @@ import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import java.lang.Math;
 
+import android.util.Log;
 import app.flycatfly.manager.ResourcesManager;
 
 import com.badlogic.gdx.math.Vector2;
@@ -102,9 +103,13 @@ public abstract class Player extends AnimatedSprite
 	
 	public void fly(float xDiff, float yDiff)
 	{
-	    float xVelo = xDiff/20;
-	    float yVelo = yDiff/20;
-	    body.setLinearVelocity(xVelo, yVelo);
+		float length = 10; //velocity
+		float longLength = (float) Math.sqrt(Math.pow(xDiff,2) + Math.pow(yDiff,2));
+		float multiplier =length/longLength;
+		float x = xDiff*multiplier;
+		float y = yDiff*multiplier;
+		Log.d("mine", "x:"+x+"y:"+y+"multiplier:"+multiplier+"longlength:"+longLength);
+		body.setLinearVelocity(new Vector2(x,y));
 	}
 	
 	public void increaseFootContacts()
