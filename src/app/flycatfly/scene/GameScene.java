@@ -206,7 +206,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 						@Override
 						public void onDie()
 						{
-							//SceneManager.getInstance().loadCompleteScene(engine);
+							SceneManager.getInstance().loadCompleteScene(engine);
 						}
 					};
 					levelObject = player;
@@ -223,7 +223,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 
 							if (player.collidesWith(this))
 							{
-								//flightCompleteScene.display(score, GameScene.this, camera);
 								this.setVisible(false);
 								this.setIgnoreUpdate(true);
 							}

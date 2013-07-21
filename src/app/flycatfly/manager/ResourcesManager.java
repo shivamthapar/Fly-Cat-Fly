@@ -98,6 +98,25 @@ public class ResourcesManager
 		}
 	}
 	
+	public void loadCompleteGraphics()
+	{
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
+        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+        menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
+        play_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
+        options_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "options.png");
+       
+    	try 
+    	{
+			this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+			this.menuTextureAtlas.load();
+		} 
+    	catch (final TextureAtlasBuilderException e)
+    	{
+			Debug.e(e);
+		}
+	}
+	
 	private void loadMenuAudio()
 	{
 		

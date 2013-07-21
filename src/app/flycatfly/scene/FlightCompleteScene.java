@@ -27,7 +27,7 @@ public class FlightCompleteScene extends BaseScene implements IOnMenuItemClickLi
 	private Text distanceText;
 
 	private final int MENU_PLAY = 0;
-	private final int MENU_OPTIONS = 1;
+	private final int MENU_QUIT = 1;
 	
 	private void createText()
 	{
@@ -40,6 +40,7 @@ public class FlightCompleteScene extends BaseScene implements IOnMenuItemClickLi
 	public void createScene()
 	{
 		createBackground();
+		createText();
 		createMenuChildScene();
 	}
 
@@ -70,7 +71,7 @@ public class FlightCompleteScene extends BaseScene implements IOnMenuItemClickLi
 			//Load Game Scene!
 			SceneManager.getInstance().loadGameScene(engine);
 			return true;
-		case MENU_OPTIONS:
+		case MENU_QUIT:
 			return true;
 		default:
 			return false;
@@ -100,16 +101,16 @@ public class FlightCompleteScene extends BaseScene implements IOnMenuItemClickLi
 		menuChildScene.setPosition(0, 0);
 
 		final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, resourcesManager.play_region, vbom), 1.2f, 1);
-		final IMenuItem optionsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, resourcesManager.options_region, vbom), 1.2f, 1);
+		final IMenuItem quitMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_QUIT, resourcesManager.options_region, vbom), 1.2f, 1);
 
 		menuChildScene.addMenuItem(playMenuItem);
-		menuChildScene.addMenuItem(optionsMenuItem);
+		menuChildScene.addMenuItem(quitMenuItem);
 
 		menuChildScene.buildAnimations();
 		menuChildScene.setBackgroundEnabled(false);
 
 		playMenuItem.setPosition(playMenuItem.getX(), playMenuItem.getY() - 40);
-		optionsMenuItem.setPosition(optionsMenuItem.getX(), optionsMenuItem.getY() - 70);
+		quitMenuItem.setPosition(quitMenuItem.getX(), quitMenuItem.getY() - 70);
 
 		menuChildScene.setOnMenuItemClickListener(this);
 
