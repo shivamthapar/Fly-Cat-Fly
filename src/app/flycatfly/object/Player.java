@@ -78,9 +78,10 @@ public abstract class Player extends AnimatedSprite
 					else
 					{
 						speed = 0; //putting the character to a complete stop
+						onDie();
 					}
 				
-					if (getY() <= 0 || speed <= 0)
+					if (getY() <= 0)
 					{					
 						onDie();
 					}

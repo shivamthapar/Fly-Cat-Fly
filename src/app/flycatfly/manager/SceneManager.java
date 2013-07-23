@@ -137,14 +137,13 @@ public class SceneManager
 	
 	public void loadCompleteScene(final Engine mEngine)
 	{
-		ResourcesManager.getInstance().loadMenuResources(); // TODO - load complete resources
 		gameScene.disposeScene();
 		mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
 		{
             public void onTimePassed(final TimerHandler pTimerHandler) 
             {
             	mEngine.unregisterUpdateHandler(pTimerHandler);
-            	//ResourcesManager.getInstance().loadMenuTextures();
+            	ResourcesManager.getInstance().loadCompleteGraphics();
             	completeScene = new FlightCompleteScene();
         		setScene(completeScene);
             }
