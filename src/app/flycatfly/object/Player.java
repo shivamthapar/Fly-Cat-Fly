@@ -27,7 +27,7 @@ public abstract class Player extends AnimatedSprite
 	
 	private int footContacts = 0;
 	
-	public float speed = 5;
+	public float speed = 6;
 	
 	public double distance = 0.000;
 	
@@ -103,13 +103,10 @@ public abstract class Player extends AnimatedSprite
 	
 	public void fly(float xDiff, float yDiff)
 	{
-		float length = 10; //velocity
-		float longLength = (float) Math.sqrt(Math.pow(xDiff,2) + Math.pow(yDiff,2));
-		float multiplier =length/longLength;
-		float x = xDiff*multiplier;
+		float multiplier = speed/xDiff;
 		float y = yDiff*multiplier;
-		Log.d("mine", "x:"+x+"y:"+y+"multiplier:"+multiplier+"longlength:"+longLength);
-		body.setLinearVelocity(new Vector2(x,y));
+		Log.d("mine", "x:"+speed+"y:"+y+"multiplier:"+multiplier);
+		body.setLinearVelocity(speed,y);
 	}
 	
 	public void increaseFootContacts()
