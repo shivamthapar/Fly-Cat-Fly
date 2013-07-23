@@ -104,10 +104,12 @@ public abstract class Player extends AnimatedSprite
 	
 	public void fly(float xDiff, float yDiff)
 	{
-		float multiplier = speed/xDiff;
-		float y = yDiff*multiplier;
-		Log.d("mine", "x:"+speed+"y:"+y+"multiplier:"+multiplier);
-		body.setLinearVelocity(speed,y);
+		float c1= (float) Math.sqrt(xDiff*xDiff+yDiff*yDiff);
+		float c2=speed;
+		float ratio = c2/c1;
+		float x2 = xDiff*ratio;
+		float y2 = yDiff*ratio;
+		body.setLinearVelocity(x2, y2);
 	}
 	
 	public void increaseFootContacts()
