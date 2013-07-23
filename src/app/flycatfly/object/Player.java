@@ -33,6 +33,7 @@ public abstract class Player extends AnimatedSprite
 	
 	public double resistance = 0.01;
 
+	private float initX, initY;
 	
 	// ---------------------------------------------
 	// CONSTRUCTOR
@@ -41,6 +42,8 @@ public abstract class Player extends AnimatedSprite
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld physicsWorld)
 	{
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
+		initX=pX;
+		initY=pY;
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
 	}
@@ -68,7 +71,6 @@ public abstract class Player extends AnimatedSprite
 					if (speed > 0.3)
 					{
 						speed -= resistance; // while the character has speed, decrease constantly by resistance
-						distance += speed/10;
 					}
 					else if (speed > 0)
 					{
@@ -85,7 +87,8 @@ public abstract class Player extends AnimatedSprite
 					{					
 						onDie();
 					}
-					
+					calculateDistance();
+					Log.d("mine", "distance:"+distance);
 					body.setLinearVelocity(new Vector2(speed, body.getLinearVelocity().y)); 
 				}
 	        }
@@ -120,6 +123,11 @@ public abstract class Player extends AnimatedSprite
 	public void decreaseFootContacts()
 	{
 		footContacts--;
+	}
+	
+	public void calculateDistance(){
+		Log.d("mine", "getX:"+getX()+" initX:"+initX);
+		distance= (getX()-initX)/10;
 	}
 	
 	public abstract void onDie();
