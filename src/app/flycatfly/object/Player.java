@@ -6,8 +6,10 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import java.lang.Math;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import app.flycatfly.manager.ResourcesManager;
 
@@ -18,10 +20,21 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public abstract class Player extends AnimatedSprite
 {
 	// ---------------------------------------------
+	// CONSTANTS
+	// ---------------------------------------------
+	
+	public final double DISTANCE_MONEY_MULTIPLIER = 0.6;
+	
+	
+	// ---------------------------------------------
 	// VARIABLES
 	// ---------------------------------------------
 	
 	private Body body;
+	
+	private SharedPreferences sharedPref;
+	
+	public int money;
 	
 	private boolean canRun = false;
 	
@@ -32,18 +45,20 @@ public abstract class Player extends AnimatedSprite
 	public double distance = 0.000;
 	
 	public double resistance = 0.01;
-
+	
 	private float initX, initY;
 	
 	// ---------------------------------------------
 	// CONSTRUCTOR
 	// ---------------------------------------------
 	
-	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld physicsWorld)
+	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld physicsWorld, Activity activity)
 	{
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
 		initX=pX;
 		initY=pY;
+		sharedPref=activity.getPreferences(Context.MODE_PRIVATE);
+		money = sharedPref.getInt("money", 0);
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
 	}
@@ -128,6 +143,10 @@ public abstract class Player extends AnimatedSprite
 	public void calculateDistance(){
 		Log.d("mine", "getX:"+getX()+" initX:"+initX);
 		distance= (getX()-initX)/10;
+	}
+	
+	public int getNewMoney(){
+		return money+(int)(DISTANCE_MONEY_MULTIPLIER*distance);
 	}
 	
 	public abstract void onDie();

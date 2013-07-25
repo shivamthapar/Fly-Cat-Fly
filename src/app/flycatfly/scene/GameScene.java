@@ -28,6 +28,8 @@ import org.andengine.util.level.simple.SimpleLevelEntityLoaderData;
 import org.andengine.util.level.simple.SimpleLevelLoader;
 import org.xml.sax.Attributes;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import app.flycatfly.base.BaseScene;
 import app.flycatfly.manager.SceneManager;
 import app.flycatfly.manager.SceneManager.SceneType;
@@ -49,6 +51,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	private Text distanceText;
 	private PhysicsWorld physicsWorld;
 	private FlightCompleteScene flightCompleteWindow;
+	private SharedPreferences sharedPref;
 	
 	private static final String TAG_ENTITY = "entity";
 	private static final String TAG_ENTITY_ATTRIBUTE_X = "x";
@@ -72,6 +75,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	@Override
 	public void createScene()
 	{
+		sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
 		createBackground();
 		createHUD();
 		createPhysics();
@@ -201,11 +205,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 				}	
 				else if (type.equals(TAG_ENTITY_ATTRIBUTE_TYPE_VALUE_PLAYER))
 				{
-					player = new Player(x, y, vbom, camera, physicsWorld)
+					player = new Player(x, y, vbom, camera, physicsWorld, activity)
 					{
 						@Override
 						public void onDie()
 						{
+							SharedPreferences.Editor editor = sharedPref.edit();
+							editor.putInt("money", getNewMoney());
+							editor.commit();
 							SceneManager.getInstance().loadCompleteScene(engine);
 						}
 					};
