@@ -23,6 +23,7 @@ public abstract class Player extends AnimatedSprite
 	// CONSTANTS
 	// ---------------------------------------------
 	
+	public final double PIXEL_DISTANCE_MULTIPLIER = 0.1;
 	public final double DISTANCE_MONEY_MULTIPLIER = 0.6;
 	
 	
@@ -37,12 +38,16 @@ public abstract class Player extends AnimatedSprite
 	public int money;
 	
 	private boolean canRun = false;
+	public boolean onGround = false;
 	
 	private int footContacts = 0;
 	
 	public float speed = 6;
 	
 	public double distance = 0.000;
+	
+	public double maxAltitude = 0.000;
+	public float maxSpeed = 0;
 	
 	public double resistance = 0.01;
 	
@@ -71,7 +76,8 @@ public abstract class Player extends AnimatedSprite
 	{		
 		body = PhysicsFactory.createBoxBody(physicsWorld, this, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(0, 0, 0));
 		body.setUserData("player");
-		body.setFixedRotation(true);
+		body.setLinearVelocity(speed, body.getLinearVelocity().y);
+		body.setLinearDamping(0.6f);
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, true)
 		{
@@ -83,28 +89,33 @@ public abstract class Player extends AnimatedSprite
 				
 				if (canRun)
 				{
-					if (speed > 0.3)
+					double currentAltitude = getY()*PIXEL_DISTANCE_MULTIPLIER;
+					if(currentAltitude>maxAltitude)
 					{
-						speed -= resistance; // while the character has speed, decrease constantly by resistance
+						maxAltitude=currentAltitude;
 					}
-					else if (speed > 0)
-					{
-						speed-= resistance;
+					
+					speed=(float) Math.sqrt(Math.pow(body.getLinearVelocity().x, 2)+Math.pow(body.getLinearVelocity().y, 2));
+					
+					if(speed>maxSpeed){
+						maxSpeed=speed;
+					}
+					if(speed<0.3&&speed>0){
+						speed=0;
 						stopAnimation(); //stopping the animation once the character is almost stopped
 					}
-					else
-					{
-						speed = 0; //putting the character to a complete stop
-						onDie();
-					}
-				
 					if (getY() <= 0)
 					{					
 						onDie();
 					}
 					calculateDistance();
-					Log.d("mine", "distance:"+distance);
-					body.setLinearVelocity(new Vector2(speed, body.getLinearVelocity().y)); 
+					Log.d("mine", "xVel:"+body.getLinearVelocity().x+" yVel: "+body.getLinearVelocity().y);
+					Log.d("mine", "speed:"+speed);
+				}
+				if(speed==0&&onGround){
+					Log.d("mine","speed == 0 called!!!!");
+					speed=0;
+					onDie();
 				}
 	        }
 		});
@@ -122,12 +133,15 @@ public abstract class Player extends AnimatedSprite
 	
 	public void fly(float xDiff, float yDiff)
 	{
-		float c1= (float) Math.sqrt(xDiff*xDiff+yDiff*yDiff);
-		float c2=speed;
-		float ratio = c2/c1;
-		float x2 = xDiff*ratio;
-		float y2 = yDiff*ratio;
-		body.setLinearVelocity(x2, y2);
+		float angle = (float) Math.atan2(yDiff,xDiff);
+		if(speed<0.3)
+			return;
+		if(Math.abs(angle)>Math.PI/2)
+			return;
+		float xVel = (float) (speed*Math.cos(angle));
+		float yVel = (float) (speed*Math.sin(angle));
+		body.setLinearVelocity(xVel,yVel);
+		body.setTransform(body.getPosition(),angle);
 	}
 	
 	public void increaseFootContacts()
@@ -142,7 +156,7 @@ public abstract class Player extends AnimatedSprite
 	
 	public void calculateDistance(){
 		Log.d("mine", "getX:"+getX()+" initX:"+initX);
-		distance= (getX()-initX)/10;
+		distance= (getX()-initX)*PIXEL_DISTANCE_MULTIPLIER;
 	}
 	
 	public int getNewMoney(){

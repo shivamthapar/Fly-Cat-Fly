@@ -298,11 +298,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 					{
 						player.increaseFootContacts();
 					}
-					
+					if (x1.getBody().getUserData().equals("platform1") && x2.getBody().getUserData().equals("player"))
+					{
+						player.onGround = true;
+					}
 					if (x1.getBody().getUserData().equals("platform2") && x2.getBody().getUserData().equals("player"))
 					{
 						engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
-						{									
+						{						
 						    public void onTimePassed(final TimerHandler pTimerHandler)
 						    {
 						    	pTimerHandler.reset();
@@ -329,6 +332,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 					if (x2.getBody().getUserData().equals("player"))
 					{
 						player.decreaseFootContacts();
+					}
+					if (x1.getBody().getUserData().equals("platform1") && x2.getBody().getUserData().equals("player"))
+					{
+						player.onGround = false;
 					}
 				}
 			}
