@@ -25,6 +25,8 @@ public abstract class Player extends AnimatedSprite
 	
 	public final double PIXEL_DISTANCE_MULTIPLIER = 0.1;
 	public final double DISTANCE_MONEY_MULTIPLIER = 0.6;
+	public final float RESISTANCE_MULTIPLIER = 0.6f;
+	public final int INIT_VELOCITY_EXTRA = 7;
 	
 	
 	// ---------------------------------------------
@@ -37,34 +39,41 @@ public abstract class Player extends AnimatedSprite
 	
 	public int money;
 	
-	private boolean canRun = false;
+	private boolean canRun = true;
+	public boolean onRamp = true;
 	public boolean onGround = false;
 	
 	private int footContacts = 0;
 	
-	public float speed = 6;
+	public float speed = 7;
 	
 	public double distance = 0.000;
 	
 	public double maxAltitude = 0.000;
 	public float maxSpeed = 0;
 	
-	public double resistance = 0.01;
-	
 	private float initX, initY;
+	
+	public int rampHeight = 1; //1-10
+	public int initVelocity = 1; //1-10
+	public int resistance = 1; //1-10
+	
+	public PhysicsWorld physicsWorld;
 	
 	// ---------------------------------------------
 	// CONSTRUCTOR
 	// ---------------------------------------------
 	
-	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld physicsWorld, Activity activity)
+	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld pWorld, Activity activity)
 	{
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
 		initX=pX;
 		initY=pY;
 		sharedPref=activity.getPreferences(Context.MODE_PRIVATE);
 		money = sharedPref.getInt("money", 0);
-		createPhysics(camera, physicsWorld);
+		physicsWorld=pWorld;
+		createPhysics(camera);
+		setRunning();
 		camera.setChaseEntity(this);
 	}
 	
@@ -72,12 +81,12 @@ public abstract class Player extends AnimatedSprite
 	// CLASS LOGIC
 	// ---------------------------------------------
 	
-	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld)
+	private void createPhysics(final Camera camera)
 	{		
-		body = PhysicsFactory.createBoxBody(physicsWorld, this, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(0, 0, 0));
+		body = PhysicsFactory.createCircleBody(physicsWorld, this, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(0, 0, 0));
 		body.setUserData("player");
-		body.setLinearVelocity(speed, body.getLinearVelocity().y);
-		body.setLinearDamping(0.6f);
+		body.setLinearVelocity(initVelocity+INIT_VELOCITY_EXTRA, -12);
+		body.setLinearDamping(resistance*RESISTANCE_MULTIPLIER);
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, true)
 		{
@@ -86,7 +95,6 @@ public abstract class Player extends AnimatedSprite
 	        {
 				super.onUpdate(pSecondsElapsed);
 				camera.onUpdate(0.1f);
-				
 				if (canRun)
 				{
 					double currentAltitude = getY()*PIXEL_DISTANCE_MULTIPLIER;
@@ -110,7 +118,7 @@ public abstract class Player extends AnimatedSprite
 					}
 					calculateDistance();
 					Log.d("mine", "xVel:"+body.getLinearVelocity().x+" yVel: "+body.getLinearVelocity().y);
-					Log.d("mine", "speed:"+speed);
+					Log.d("mine", "speed:"+speed+" onGround:"+onGround);
 				}
 				if(speed==0&&onGround){
 					Log.d("mine","speed == 0 called!!!!");
@@ -120,7 +128,6 @@ public abstract class Player extends AnimatedSprite
 	        }
 		});
 	}
-	
 	
 	public void setRunning()
 	{

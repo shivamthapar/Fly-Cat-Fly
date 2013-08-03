@@ -13,5 +13,5 @@
 	<entity x="500" y="200" type="coin"/>
 	<entity x="600" y="200" type="coin"/>
 	<entity x="1280" y="20" type="levelComplete"/>
-	<entity x="60" y="200" type="player"/>
+	<entity x="43" y="600" type="player"/>
 </level>

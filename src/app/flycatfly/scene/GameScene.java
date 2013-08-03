@@ -8,6 +8,7 @@ import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.ScaleModifier;
+import org.andengine.entity.primitive.Line;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
@@ -30,10 +31,12 @@ import org.xml.sax.Attributes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import app.flycatfly.base.BaseScene;
 import app.flycatfly.manager.SceneManager;
 import app.flycatfly.manager.SceneManager.SceneType;
 import app.flycatfly.object.Player;
+import app.flycatfly.object.Ramp;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -66,6 +69,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	private static final Object TAG_ENTITY_ATTRIBUTE_TYPE_VALUE_LEVEL_COMPLETE = "levelComplete";
 	
 	private Player player;
+	private Ramp ramp;
 	private int score;
 	
 	private boolean gameOverDisplayed = false;
@@ -80,6 +84,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 		createHUD();
 		createPhysics();
 		loadLevel(1);
+		ramp = new Ramp(vbom);
+		Line[] lines = ramp.getLines();
+		for(Line l: lines){
+			this.attachChild(l);
+			Body b =PhysicsFactory.createLineBody(physicsWorld, l, PhysicsFactory.createFixtureDef(1, 0, 0));
+			b.setUserData("ramp");
+		}
 		setOnSceneTouchListener(this); 
 	}
 
@@ -108,6 +119,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent)
 	{
+		Log.d("mine","touch X:"+pSceneTouchEvent.getX()+" Y:"+pSceneTouchEvent.getY());
 		this.setTouchAreaBindingOnActionDownEnabled(true);
 		this.setTouchAreaBindingOnActionMoveEnabled(true);
 		
@@ -274,7 +286,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	
 	private void createPhysics()
 	{
-		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -2), false); 
+		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -5), false); 
 		physicsWorld.setContactListener(contactListener());
 		registerUpdateHandler(physicsWorld);
 	}
@@ -301,6 +313,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 					if (x1.getBody().getUserData().equals("platform1") && x2.getBody().getUserData().equals("player"))
 					{
 						player.onGround = true;
+					}
+					if (x1.getBody().getUserData().equals("ramp") && x2.getBody().getUserData().equals("player"))
+					{
+						player.onRamp = true;
 					}
 					if (x1.getBody().getUserData().equals("platform2") && x2.getBody().getUserData().equals("player"))
 					{
@@ -336,6 +352,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 					if (x1.getBody().getUserData().equals("platform1") && x2.getBody().getUserData().equals("player"))
 					{
 						player.onGround = false;
+					}
+					if (x1.getBody().getUserData().equals("ramp") && x2.getBody().getUserData().equals("player"))
+					{
+						player.onRamp = false;
+						physicsWorld.setGravity(new Vector2(0,-3));
 					}
 				}
 			}
