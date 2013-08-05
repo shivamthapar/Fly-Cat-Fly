@@ -14,7 +14,7 @@ import app.flycatfly.base.BaseScene;
 import app.flycatfly.manager.SceneManager;
 import app.flycatfly.manager.SceneManager.SceneType;
 
-public class FlightCompleteScene extends BaseScene implements IOnMenuItemClickListener
+public class ShopScene extends BaseScene implements IOnMenuItemClickListener
 {
 	//---------------------------------------------
 	// VARIABLES
@@ -53,7 +53,7 @@ public class FlightCompleteScene extends BaseScene implements IOnMenuItemClickLi
 	@Override
 	public SceneType getSceneType()
 	{
-		return SceneType.SCENE_COMPLETE;
+		return SceneType.SCENE_SHOP;
 	}
 
 

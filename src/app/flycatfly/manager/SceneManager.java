@@ -6,7 +6,7 @@ import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
 import app.flycatfly.base.BaseScene;
-import app.flycatfly.scene.FlightCompleteScene;
+import app.flycatfly.scene.ShopScene;
 import app.flycatfly.scene.GameScene;
 import app.flycatfly.scene.LoadingScene;
 import app.flycatfly.scene.MainMenuScene;
@@ -22,7 +22,7 @@ public class SceneManager
 	private BaseScene menuScene;
 	private BaseScene gameScene;
 	private BaseScene loadingScene;
-	private BaseScene completeScene;
+	private BaseScene shopScene;
 	
 	//---------------------------------------------
 	// VARIABLES
@@ -42,7 +42,7 @@ public class SceneManager
 		SCENE_MENU,
 		SCENE_GAME,
 		SCENE_LOADING,
-		SCENE_COMPLETE
+		SCENE_SHOP
 	}
 	
 	//---------------------------------------------
@@ -72,8 +72,8 @@ public class SceneManager
 			case SCENE_LOADING:
 				setScene(loadingScene);
 				break;
-			case SCENE_COMPLETE:
-				setScene(completeScene);
+			case SCENE_SHOP:
+				setScene(shopScene);
 			default:
 				break;
 		}
@@ -135,7 +135,7 @@ public class SceneManager
 		}));
 	}
 	
-	public void loadCompleteScene(final Engine mEngine)
+	public void loadShopScene(final Engine mEngine)
 	{
 		gameScene.disposeScene();
 		mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
@@ -144,8 +144,8 @@ public class SceneManager
             {
             	mEngine.unregisterUpdateHandler(pTimerHandler);
             	ResourcesManager.getInstance().loadCompleteGraphics();
-            	completeScene = new FlightCompleteScene();
-        		setScene(completeScene);
+            	shopScene = new ShopScene();
+        		setScene(shopScene);
             }
 		}));
 	}

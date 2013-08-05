@@ -37,6 +37,8 @@ import app.flycatfly.manager.SceneManager;
 import app.flycatfly.manager.SceneManager.SceneType;
 import app.flycatfly.object.Player;
 import app.flycatfly.object.Ramp;
+import app.flycatfly.extras.LevelCompleteWindow;
+import app.flycatfly.extras.LevelCompleteWindow.StarsCount;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -53,8 +55,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 	private HUD gameHUD;
 	private Text distanceText;
 	private PhysicsWorld physicsWorld;
-	private FlightCompleteScene flightCompleteWindow;
+	private ShopScene shopScene;
 	private SharedPreferences sharedPref;
+	private LevelCompleteWindow levelCompleteWindow;
 	
 	private static final String TAG_ENTITY = "entity";
 	private static final String TAG_ENTITY_ATTRIBUTE_X = "x";
@@ -129,6 +132,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 			{
 				player.setRunning();
 				firstTouch = true;
+			}
+			else if (gameOverDisplayed == true)
+			{
+				SceneManager.getInstance().loadShopScene(engine);
 			}
 			else
 			{
@@ -225,7 +232,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 							SharedPreferences.Editor editor = sharedPref.edit();
 							editor.putInt("money", getNewMoney());
 							editor.commit();
-							SceneManager.getInstance().loadCompleteScene(engine);
+							levelCompleteWindow = new LevelCompleteWindow(vbom);
+							levelCompleteWindow.display(StarsCount.TWO, GameScene.this, camera);
+							gameOverDisplayed = true;
+							this.setVisible(false);
+			                this.setIgnoreUpdate(true);
+							
 						}
 					};
 					levelObject = player;
